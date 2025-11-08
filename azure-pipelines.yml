@@ -18,7 +18,7 @@ steps:
     inlineScript: |
       echo "Logging in to Azure Container Registry..."
       az login
-      az acr login --name ranyabrkumar
+      az acr login --name amolkhetan
 
 # Step 2: Build and Push images using Docker Compose
 - task: DockerCompose@1
@@ -26,7 +26,7 @@ steps:
   inputs:
     containerregistrytype: 'Azure Container Registry'
     azureSubscription: 'Academics-Pay-As-You-Go(a4d417d6-4b7d-4dbc-8702-15f88c83dc21)'
-    azureContainerRegistry: 'ranyabrkumar.azurecr.io'
+    azureContainerRegistry: 'amolkhetan.azurecr.io'
     dockerComposeFile: 'docker-compose.yml'
     action: 'Run a Docker Compose command'
     dockerComposeCommand: 'docker-compose build'
@@ -38,7 +38,7 @@ steps:
   inputs:
     containerregistrytype: 'Azure Container Registry'
     azureSubscription: 'Academics-Pay-As-You-Go(a4d417d6-4b7d-4dbc-8702-15f88c83dc21)'
-    azureContainerRegistry: 'ranyabrkumar.azurecr.io'
+    azureContainerRegistry: 'amolkhetan.azurecr.io'
     dockerComposeFile: 'docker-compose.yml'
     action: 'Run a Docker Compose command'
     dockerComposeCommand: 'docker-compose up'
