@@ -2,9 +2,9 @@ trigger:
 - main
 
 pool:
-  name: hvpool  # your custom self-hosted agent pool
+  name: Default  # your custom self-hosted agent pool
   demands:
-    - agent.name -equals agent_hvpool
+    - agent.name -equals KRISHNA
 
 steps:
 
