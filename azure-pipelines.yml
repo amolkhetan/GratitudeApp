@@ -1,19 +1,45 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  name: hvpool  # your custom self-hosted agent pool
+  demands:
+    - agent.name -equals agent_hvpool
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+# Step 1: Login to Azure ACR
+- task: AzureCLI@2
+  displayName: 'Login to ACR'
+  inputs:
+    azureSubscription: 'Academics-Pay-As-You-Go(a4d417d6-4b7d-4dbc-8702-15f88c83dc21)'   # your service connection name
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      echo "Logging in to Azure Container Registry..."
+      az login
+      az acr login --name ranyabrkumar
+
+# Step 2: Build and Push images using Docker Compose
+- task: DockerCompose@1
+  displayName: 'Build and push Docker images'
+  inputs:
+    containerregistrytype: 'Azure Container Registry'
+    azureSubscription: 'Academics-Pay-As-You-Go(a4d417d6-4b7d-4dbc-8702-15f88c83dc21)'
+    azureContainerRegistry: 'ranyabrkumar.azurecr.io'
+    dockerComposeFile: 'docker-compose.yml'
+    action: 'Run a Docker Compose command'
+    dockerComposeCommand: 'docker-compose build'
+    arguments: '--no-cache'
+
+# Step 3: Optionally run containers (optional)
+- task: DockerCompose@1
+  displayName: 'Run Docker Compose'
+  inputs:
+    containerregistrytype: 'Azure Container Registry'
+    azureSubscription: 'Academics-Pay-As-You-Go(a4d417d6-4b7d-4dbc-8702-15f88c83dc21)'
+    azureContainerRegistry: 'ranyabrkumar.azurecr.io'
+    dockerComposeFile: 'docker-compose.yml'
+    action: 'Run a Docker Compose command'
+    dockerComposeCommand: 'docker-compose up'
+    arguments: '-d'
