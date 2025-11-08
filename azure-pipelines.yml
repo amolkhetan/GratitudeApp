@@ -17,7 +17,6 @@ steps:
     scriptLocation: inlineScript
     inlineScript: |
       echo "Logging in to Azure Container Registry..."
-      az login
       az acr login --name amolkhetan
 
 # Step 2: Build and Push images using Docker Compose
